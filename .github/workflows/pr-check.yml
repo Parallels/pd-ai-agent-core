@@ -24,7 +24,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install black flake8 pytest mypy build twine
+          pip install black flake8 pytest mypy build twine types-setuptools
 
       - name: Check formatting
         run: black --check .
