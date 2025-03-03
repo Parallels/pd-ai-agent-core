@@ -30,11 +30,13 @@ jobs:
         run: black --check .
 
       - name: Lint
-        if: true
-        run: make lint
+        run: flake8 --count --show-source --statistics --config=setup.cfg .
+
+      - name: Type check with mypy
+        run: mypy . --explicit-package-bases --namespace-packages
 
       - name: Run tests
-        run: make test
+        run: pytest
 
       - name: Build package
         run: python -m build
