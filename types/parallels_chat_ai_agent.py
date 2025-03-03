@@ -18,13 +18,13 @@ class ParallelsAiChatAgent:
     def __init__(
         self,
         name: str,
-        instructions: str | Callable[[Dict[str, Any]], str],
-        description: str | None = None,
+        instructions: Union[str, Callable[[Dict[str, Any]], str]],
+        description: Optional[str] = None,
         model: str = DEFAULT_MODEL,
         functions: List[AgentFunction] = [],
         parallel_tool_calls: bool = True,
         transfer_instructions: Optional[str] = None,
-        icon: Optional[str | HttpUrl] = None,
+        icon: Optional[Union[str, HttpUrl]] = None,
         tool_choice: Optional[str] = None,
     ):
         self.id = normalize_string(name)
@@ -69,8 +69,8 @@ class ParallelsAiChatResult(BaseModel):
 class ParallelsAiChatAgentResponse:
     status: str
     message: str
-    error: str | None = None
-    data: dict | list[dict] | None = None
+    error: Optional[str] = None
+    data: Optional[Union[dict, List[dict]]] = None
     agent: Optional[ParallelsAiChatAgent] = None
     context_variables: dict = {}
 
@@ -78,8 +78,8 @@ class ParallelsAiChatAgentResponse:
         self,
         status: str,
         message: str,
-        error: str | None = None,
-        data: dict | list[dict] | None = None,
+        error: Optional[str] = None,
+        data: Optional[Union[dict, List[dict]]] = None,
         agent: Optional[ParallelsAiChatAgent] = None,
         context_variables: dict = {},
     ):

@@ -50,8 +50,7 @@ test:
 
 # Run linting
 lint:
-	$(VENV_BIN)/flake8 .
-	$(VENV_BIN)/mypy .
+	@.github/scripts/lint.sh
 
 # Format code using black
 format:
@@ -62,7 +61,11 @@ dev-install:
 	$(VENV_BIN)/pip install -e .
 
 # Build package
-build: clean
+build:
+	$(VENV_BIN)/python -m build
+
+# Original build target that cleans first (renamed for reference)
+build-clean: clean
 	$(VENV_BIN)/python -m build
 
 # Upload to PyPI (requires credentials)

@@ -29,15 +29,12 @@ jobs:
       - name: Check formatting
         run: black --check .
 
-      - name: Lint with flake8
-        if: false
-        run: flake8 . --count --show-source --statistics
-
-      - name: Type check with mypy
-        run: mypy .
+      - name: Lint
+        if: true
+        run: make lint
 
       - name: Run tests
-        run: pytest
+        run: make test
 
       - name: Build package
         run: python -m build
