@@ -27,6 +27,7 @@ jobs:
       new_version: ${{ steps.version_check.outputs.new_version }}
       current_version: ${{ steps.version_check.outputs.current_version }}
       release_created: ${{ steps.create_release.outputs.release_created }}
+      pr_url: ${{ steps.create_pr.outputs.pr_url }}
     env:
       BUMP_TYPE: ''
     steps:
@@ -70,66 +71,33 @@ jobs:
           echo "$CHANGELOG" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      - name: Commit version bump
+      - name: Create branch and PR for version bump
         if: steps.version_check.outputs.new_version != ''
+        id: create_pr
         env:
           GH_TOKEN: ${{ secrets.PAT }}
         run: |
+          # Create a new branch for the version bump
+          NEW_VERSION=${{ steps.version_check.outputs.new_version }}
+          BRANCH_NAME="release/v${NEW_VERSION}"
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git checkout -b $BRANCH_NAME
+
+          # Commit changes to the new branch
           git add VERSION setup.py
-          git commit -m "chore: bump version to ${{ steps.version_check.outputs.new_version }}"
-          git push
+          git commit -m "chore: bump version to ${NEW_VERSION}"
+          git push -u origin $BRANCH_NAME
 
-      - name: Create Release
-        if: steps.version_check.outputs.new_version != ''
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        with:
-          tag_name: v${{ steps.version_check.outputs.new_version }}
-          release_name: Release v${{ steps.version_check.outputs.new_version }}
-          body: ${{ env.CHANGELOG }}
-          draft: false
-          prerelease: false
-        continue-on-error: true
+          # Create a pull request
+          PR_URL=$(gh pr create --title "Release v${NEW_VERSION}" \
+            --body "This PR bumps the version to ${NEW_VERSION}. 
+            
+            ## Changelog
+            ${CHANGELOG}" \
+            --base main \
+            --head $BRANCH_NAME)
 
-      - name: Clean up on failure
-        if: failure() && steps.version_check.outputs.new_version != ''
-        env:
-          GH_TOKEN: ${{ secrets.PAT }}
-        run: |
-          # Delete the tag if it was created
-          git push --delete origin v${{ steps.version_check.outputs.new_version }} || true
-
-          # Revert version changes
-          git checkout HEAD^ VERSION setup.py
-          git commit -m "revert: version bump changes"
-          git push -f
-
-  publish:
-    needs: check-and-release
-    if: needs.check-and-release.outputs.release_created == 'true'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build twine
-
-      - name: Build and publish
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          python -m build
-          twine upload dist/*
+          echo "pr_url=${PR_URL}" >> $GITHUB_OUTPUT
+          echo "Created PR: ${PR_URL}"
