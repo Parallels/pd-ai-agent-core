@@ -1,6 +1,6 @@
 import json
 from typing import List, Callable, Union, Optional, Any, Dict
-from common.common import DEFAULT_MODEL
+from common.defaults import DEFAULT_MODEL
 from helpers.strings import normalize_string
 
 # Third-party imports
