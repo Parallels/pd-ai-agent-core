@@ -8,7 +8,7 @@ requirements = ["pydantic>=1.10.0,<2.0.0", "typing-extensions>=4.0.0"]
 
 setup(
     name="pd-ai-agent-core",
-    version="0.0.1",
+    version="0.0.2",
     author="Parallels",
     author_email="carlos.lapao@parallels.com",
     description="A core library for AI agent functionality",
