@@ -3,7 +3,7 @@ from messages.message import Message
 from websockets.legacy.server import WebSocketServerProtocol
 import json
 import uuid
-from services.session_manager import SessionManager
+from .session_manager import SessionManager
 from messages.error_message import create_error_message
 from messages.event_message import create_event_message
 from messages.error_message import create_error_message_from_message

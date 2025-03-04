@@ -23,12 +23,12 @@ class VirtualMachineDataSource:
     def get_instance(cls) -> "VirtualMachineDataSource":
         """Get the singleton instance"""
         if cls._instance is None:
-            raise RuntimeError("VMDataSource not initialized")
+            raise RuntimeError("VirtualMachineDataSource not initialized")
         return cls._instance
 
     def __init__(self):
         if self._instance is not None:
-            raise RuntimeError("Use get_instance() to access VMDataSource")
+            raise RuntimeError("Use get_instance() to access VirtualMachineDataSource")
 
         self._vms: Dict[str, VirtualMachine] = {}  # vm_id -> VM
         self._last_update: Optional[datetime] = None

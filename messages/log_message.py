@@ -1,9 +1,9 @@
 from datetime import datetime
 from typing import Optional
 from core_types.content_message import ContentMessage
-from common import LOG_SUBJECT, GLOBAL_CHANNEL
+from common.constants import LOG_SUBJECT, GLOBAL_CHANNEL
 from enum import Enum
-from common import MessageStatus
+from common.message_status import MessageStatus
 from .message import Message
 import uuid
 

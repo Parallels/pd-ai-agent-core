@@ -1,8 +1,8 @@
 from typing import Optional, Any
 from core_types.content_message import ContentMessage
 import uuid
-from common import ERROR_SUBJECT
-from common import MessageStatus
+from common.constants import ERROR_SUBJECT
+from common.message_status import MessageStatus
 
 
 class Message:

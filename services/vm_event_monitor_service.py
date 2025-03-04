@@ -37,7 +37,12 @@ logger = logging.getLogger(__name__)
 
 
 class VmEventMonitorService(SessionService):
-    def __init__(self, session_id: str, debug: bool = False):
+    def __init__(
+        self,
+        session_id: str,
+        debug: bool = False,
+        datasource: VirtualMachineDataSource = None,
+    ):
         self._process = None
         self._running = False
         self._thread = None
@@ -63,7 +68,9 @@ class VmEventMonitorService(SessionService):
         self.notification_service = notifications_service
         self.logger_service = logger_service
         self.background_service = background_service
-        self.datasource = VirtualMachineDataSource.get_instance()
+        self.datasource = datasource
+        if self.datasource is None:
+            raise ValueError(f"Datasource not found for session {session_id}")
         self.register()
 
     def name(self) -> str:

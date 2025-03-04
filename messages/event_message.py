@@ -1,7 +1,7 @@
 from core_types.content_message import ContentMessage
 from typing import Any, Dict, Optional
 from .message import Message
-from common import EVENT_SUBJECT, GLOBAL_CHANNEL
+from common.constants import EVENT_SUBJECT, GLOBAL_CHANNEL
 
 
 class EventMessage(ContentMessage):

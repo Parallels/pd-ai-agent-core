@@ -1,5 +1,5 @@
 from core_types.content_message import ContentMessage
-from common import NOTIFICATION_SUBJECT, GLOBAL_CHANNEL
+from common.constants import NOTIFICATION_SUBJECT, GLOBAL_CHANNEL
 from enum import Enum
 from typing import Dict, Any, Optional
 from .message import Message

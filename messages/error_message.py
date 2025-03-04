@@ -2,8 +2,8 @@ from core_types.content_message import ContentMessage
 from .message import Message
 import uuid
 from typing import Optional
-from common import ERROR_SUBJECT
-from common import MessageStatus
+from common.constants import ERROR_SUBJECT
+from common.message_status import MessageStatus
 
 
 class ErrorMessage(ContentMessage):

@@ -2,7 +2,7 @@ from .message import Message
 from core_types.content_message import ContentMessage
 from typing import Dict, Any, Optional
 import uuid
-from common import (
+from common.constants import (
     CHAT_SUBJECT,
     TOOL_CHANGE_SUBJECT,
     AGENT_FUNCTION_CALL_SUBJECT,

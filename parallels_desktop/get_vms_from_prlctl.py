@@ -4,10 +4,11 @@ import subprocess
 import json
 from .get_vm_screenshot import get_vm_screenshot
 from .models.get_vm_result import GetVmResult
+from .models.get_vms_result import GetVmsResult
 from .vm_parser import parse_vm_json
 
 
-def get_vms_from_prlctl(take_screenshot: bool = False) -> GetVmResult:
+def get_vms_from_prlctl(take_screenshot: bool = False) -> GetVmsResult:
     try:
         cmd: List[str] = [str(get_prlctl_command()), "list", "-a", "-i", "--json"]
         result = subprocess.run(
@@ -22,30 +23,30 @@ def get_vms_from_prlctl(take_screenshot: bool = False) -> GetVmResult:
             for vm in data:
                 vm_screenshot_result = get_vm_screenshot(vm["ID"])
                 vm["Screenshot"] = vm_screenshot_result.screenshot
-        return GetVmResult(
+        return GetVmsResult(
             success=True,
             message="VMs listed successfully",
             exit_code=0,
             error="",
-            raw_vms=data,
+            raw_result=data,
             vms=[parse_vm_json(vm) for vm in data],
         )
     except subprocess.CalledProcessError as e:
-        return GetVmResult(
+        return GetVmsResult(
             success=False,
             message=f"Failed to list VMs: {e}",
             exit_code=1,
             error=str(e),
-            raw_vms=[],
+            raw_result=[],
             vms=[],
         )
     except json.JSONDecodeError as e:
-        return GetVmResult(
+        return GetVmsResult(
             success=False,
             message=f"Failed to parse VM list output: {e}",
             exit_code=1,
             error=str(e),
-            raw_vms=[],
+            raw_result=[],
             vms=[],
         )
 

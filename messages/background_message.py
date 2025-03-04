@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Dict
 from datetime import datetime
 from core_types.content_message import ContentMessage
-from common import BACKGROUND_MESSAGE_SUBJECT
+from common.constants import BACKGROUND_MESSAGE_SUBJECT
 
 
 @dataclass

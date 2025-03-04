@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Dict
 from core_types.content_message import ContentMessage
-from common import SYSTEM_MESSAGE_SUBJECT
+from common.constants import SYSTEM_MESSAGE_SUBJECT
 from .message import Message
 from enum import Enum
 import logging
