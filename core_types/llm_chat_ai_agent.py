@@ -6,7 +6,7 @@ from helpers.strings import normalize_string
 # Third-party imports
 from pydantic import BaseModel, HttpUrl
 
-AgentFunction = Callable[[], Union[str, "ParallelsAiChatAgent", dict]]
+AgentFunction = Callable[[], Union[str, "LlmChatAgent", dict]]
 
 
 class DataResult:
@@ -14,7 +14,7 @@ class DataResult:
     context_variables: Dict[str, Any] = dict()
 
 
-class ParallelsAiChatAgent:
+class LlmChatAgent:
     def __init__(
         self,
         name: str,
@@ -39,16 +39,16 @@ class ParallelsAiChatAgent:
         self.tool_choice = tool_choice
 
 
-class ParallelsAiChatResponse(BaseModel):
+class LlmChatResponse(BaseModel):
     messages: List = []
-    agent: Optional[ParallelsAiChatAgent] = None
+    agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
 
     class Config:
         arbitrary_types_allowed = True
 
 
-class ParallelsAiChatResult(BaseModel):
+class LlmChatResult(BaseModel):
     """
     Encapsulates the possible return values for an agent function.
 
@@ -59,19 +59,19 @@ class ParallelsAiChatResult(BaseModel):
     """
 
     value: str = ""
-    agent: Optional[ParallelsAiChatAgent] = None
+    agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
 
     class Config:
         arbitrary_types_allowed = True
 
 
-class ParallelsAiChatAgentResponse:
+class LlmChatAgentResponse:
     status: str
     message: str
     error: Optional[str] = None
     data: Optional[Union[dict, List[dict]]] = None
-    agent: Optional[ParallelsAiChatAgent] = None
+    agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
 
     def __init__(
@@ -80,7 +80,7 @@ class ParallelsAiChatAgentResponse:
         message: str,
         error: Optional[str] = None,
         data: Optional[Union[dict, List[dict]]] = None,
-        agent: Optional[ParallelsAiChatAgent] = None,
+        agent: Optional[LlmChatAgent] = None,
         context_variables: dict = {},
     ):
         self.status = status
@@ -109,7 +109,7 @@ class ParallelsAiChatAgentResponse:
 
     @staticmethod
     def from_dict(data: dict):
-        return ParallelsAiChatAgentResponse(
+        return LlmChatAgentResponse(
             status=data["status"],
             message=data["message"],
             error=data["error"],
