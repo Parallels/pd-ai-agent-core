@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Any, ClassVar
+from typing import Dict, Optional, ClassVar
 from datetime import datetime, timedelta
 from core_types.session import Session
 

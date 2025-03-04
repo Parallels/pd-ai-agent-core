@@ -1,6 +1,6 @@
-from typing import Dict, Any, List
-from .models.vm import (
-    VM,
+from typing import Dict, Any
+from .models.virtual_machine import (
+    VirtualMachine,
     GuestTools,
     MouseAndKeyboard,
     USBAndBluetooth,
@@ -28,8 +28,6 @@ from .models.vm import (
     Network,
     MiscellaneousSharing,
     Advanced,
-    IPAddress,
-    PrintManagement,
     SmartGuard,
     Usb,
     SharedProfile,
@@ -38,7 +36,7 @@ from .models.vm import (
 )
 
 
-def parse_vm_json(data: Dict[str, Any]) -> VM:
+def parse_vm_json(data: Dict[str, Any]) -> VirtualMachine:
     """Parse VM JSON data into a VM object"""
 
     # Parse nested objects first
@@ -118,7 +116,7 @@ def parse_vm_json(data: Dict[str, Any]) -> VM:
     advanced = Advanced(data=data)
 
     # Create and return the VM object
-    return VM(
+    return VirtualMachine(
         id=data["ID"] if "ID" in data else "",
         name=data["Name"] if "Name" in data else "",
         description=data["Description"] if "Description" in data else "",

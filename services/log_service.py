@@ -1,4 +1,4 @@
-from typing import Optional, ClassVar
+from typing import Optional
 from common.constants import NOTIFICATION_SERVICE_NAME, LOGGER_SERVICE_NAME
 from messages.log_message import create_log_message, LogLevel
 import uuid
@@ -8,7 +8,7 @@ from .service_registry import ServiceRegistry
 from .notification_service import NotificationService
 from core_types.session_service import SessionService
 import os
-from common.defaults import parse_boolean
+from helpers.strings import parse_boolean
 
 logger = logging.getLogger(__name__)
 

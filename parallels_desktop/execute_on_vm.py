@@ -1,5 +1,5 @@
 import subprocess
-from typing import List, Optional
+from typing import List
 from .get_vms import get_vm
 from .helpers import get_prlctl_command
 from .models.execute_vm_command_result import ExecuteVmCommandResult
@@ -16,7 +16,7 @@ def execute_on_vm(
             return ExecuteVmCommandResult(
                 error=vm_details.message, exit_code=vm_details.exit_code
             )
-        if vm_details.vm["State"] != "running":
+        if vm_details.raw_result["State"] != "running":
             return ExecuteVmCommandResult(error="VM is not running", exit_code=1)
     except Exception as e:
         return ExecuteVmCommandResult(error=str(e), exit_code=1)

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Optional
 from core_types.content_message import ContentMessage
 from common import LOG_SUBJECT, GLOBAL_CHANNEL
 from enum import Enum

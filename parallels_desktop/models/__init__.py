@@ -6,4 +6,4 @@ from .get_vm_screenshot_result import *
 from .operation_result import *
 from .get_vm_result import *
 from .set_vm_state_result import *
-from .vm import *
+from .virtual_machine import *

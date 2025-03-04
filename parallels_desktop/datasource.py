@@ -1,15 +1,15 @@
 from typing import Dict, List, Optional, ClassVar
 import logging
-from .models.vm import VM
+from .models.virtual_machine import VirtualMachine
 from datetime import datetime, timedelta
-from .get_vms import get_vms
+from .get_vms_from_prlctl import get_vms_from_prlctl
 from .vm_parser import parse_vm_json
 
 logger = logging.getLogger(__name__)
 
 
 class VirtualMachineDataSource:
-    """Singleton class to manage VM data source"""
+    """Singleton class to manage VirtualMachine data source"""
 
     _instance: ClassVar[Optional["VirtualMachineDataSource"]] = None
 
@@ -30,16 +30,16 @@ class VirtualMachineDataSource:
         if self._instance is not None:
             raise RuntimeError("Use get_instance() to access VMDataSource")
 
-        self._vms: Dict[str, VM] = {}  # vm_id -> VM
+        self._vms: Dict[str, VirtualMachine] = {}  # vm_id -> VM
         self._last_update: Optional[datetime] = None
         self._cache_duration = timedelta(seconds=300)  # cache for 5 minutes
-        vms = get_vms()
+        vms = get_vms_from_prlctl()
         if vms.success:
             for vm in vms.vms:
                 vm_model = parse_vm_json(vm)
                 self._vms[vm_model.id] = vm_model
 
-    def update_vm(self, vm: VM) -> None:
+    def update_vm(self, vm: VirtualMachine) -> None:
         """Update a single VM in the cache"""
         self._vms[vm.id] = vm
         self._last_update = datetime.now()
@@ -49,21 +49,21 @@ class VirtualMachineDataSource:
         self._vms[vm_id].state = state
         self._last_update = datetime.now()
 
-    def update_vms(self, vms: List[VM]) -> None:
+    def update_vms(self, vms: List[VirtualMachine]) -> None:
         """Update multiple VMs in the cache"""
         for vm in vms:
             self._vms[vm.id] = vm
         self._last_update = datetime.now()
 
-    def get_vm(self, vm_id: str) -> Optional[VM]:
-        """Get a VM by ID"""
+    def get_vm(self, vm_id: str) -> Optional[VirtualMachine]:
+        """Get a VirtualMachine by ID"""
         return self._vms.get(vm_id)
 
-    def get_all_vms(self) -> List[VM]:
+    def get_all_vms(self) -> List[VirtualMachine]:
         """Get all VMs"""
         return list(self._vms.values())
 
-    def get_vms_by_state(self, state: str) -> List[VM]:
+    def get_vms_by_state(self, state: str) -> List[VirtualMachine]:
         """Get all VMs in a specific state"""
         return [vm for vm in self._vms.values() if vm.state.lower() == state.lower()]
 
@@ -86,7 +86,7 @@ class VirtualMachineDataSource:
         """Remove a VM from the cache"""
         self._vms.pop(vm_id, None)
 
-    def get_vms_by_name_pattern(self, pattern: str) -> List[VM]:
+    def get_vms_by_name_pattern(self, pattern: str) -> List[VirtualMachine]:
         """Get VMs matching a name pattern"""
         return [vm for vm in self._vms.values() if pattern.lower() in vm.name.lower()]
 

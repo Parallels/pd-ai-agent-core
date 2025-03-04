@@ -26,7 +26,7 @@ def get_os_version(base_os: str, vm_id: str) -> GetVmOsVersionResult:
             exit_code=vmResult.exit_code,
             error=vmResult.error,
         )
-    if vmResult.vm["State"] != "running":
+    if vmResult.raw_result["State"] != "running":
         return GetVmOsVersionResult(
             success=False,
             message="VM is not running",

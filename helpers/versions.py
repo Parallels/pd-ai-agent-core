@@ -63,7 +63,7 @@ class VersionUtils:
         """Check if version matches constraint"""
         try:
             version = version.lstrip("v")
-            ver = semver.VersionInfo.parse(version)
+            # ver = semver.VersionInfo.parse(version)
             constraints = VersionUtils.parse_constraint(constraint)
 
             for c in constraints:

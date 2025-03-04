@@ -54,7 +54,7 @@ async def send_problem_report(
                 session_id=session_id,
                 channel=vm_id,
                 message="Error sending problem report",
-                details=f"The problem report was not sent successfully",
+                details="The problem report was not sent successfully",
             )
             await notifications.send(error_message)
             return OperationResult(
@@ -69,7 +69,7 @@ async def send_problem_report(
             session_id=session_id,
             channel=vm_id,
             message=f"Error sending problem report: {e}",
-            details=f"The problem report was not sent successfully",
+            details="The problem report was not sent successfully",
         )
         await notifications.send(error_message)
         return OperationResult(

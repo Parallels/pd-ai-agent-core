@@ -1,5 +1,4 @@
 from typing import Optional, Any
-from enum import Enum
 from core_types.content_message import ContentMessage
 import uuid
 from common import ERROR_SUBJECT

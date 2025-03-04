@@ -1,4 +1,3 @@
-from .execute_on_vm import execute_on_vm
 from .get_vms import get_vm
 from .helpers import get_prlctl_command
 from typing import List
@@ -24,7 +23,7 @@ def delete_vm(vm_id: str) -> DeleteVmResult:
                 exit_code=vmResult.exit_code,
                 error=vmResult.error,
             )
-        if vmResult.vm["State"] == "running":
+        if vmResult.raw_result["State"] == "running":
             return DeleteVmResult(
                 success=False,
                 message="VM is running",

@@ -59,7 +59,7 @@ def set_vm_state(
                     message="VM is already running",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.RESUME:
                 return SetVmStateResult(
@@ -67,7 +67,7 @@ def set_vm_state(
                     message="VM is already running",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
         elif vmState == "stopped":
             if state == VirtualMachineState.STOP:
@@ -76,7 +76,7 @@ def set_vm_state(
                     message="VM is already stopped",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.RESUME:
                 return SetVmStateResult(
@@ -84,7 +84,7 @@ def set_vm_state(
                     message="VM is stopped, cannot resume",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.PAUSE:
                 return SetVmStateResult(
@@ -92,7 +92,7 @@ def set_vm_state(
                     message="VM is stopped, cannot pause",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.SHUTDOWN:
                 return SetVmStateResult(
@@ -100,7 +100,7 @@ def set_vm_state(
                     message="VM is stopped, cannot shutdown",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.RESTART:
                 return SetVmStateResult(
@@ -108,7 +108,7 @@ def set_vm_state(
                     message="VM is stopped, cannot reboot",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.SUSPEND:
                 return SetVmStateResult(
@@ -116,7 +116,7 @@ def set_vm_state(
                     message="VM is stopped, cannot suspend",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
         elif vmState == "paused":
             if state == VirtualMachineState.PAUSE:
@@ -125,7 +125,7 @@ def set_vm_state(
                     message="VM is already paused",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.SUSPEND:
                 return SetVmStateResult(
@@ -133,7 +133,7 @@ def set_vm_state(
                     message="VM is already paused, cannot suspend",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
         elif vmState == "suspended":
             if state == VirtualMachineState.PAUSE:
@@ -142,7 +142,7 @@ def set_vm_state(
                     message="VM is suspended, cannot pause",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
             elif state == VirtualMachineState.SUSPEND:
                 return SetVmStateResult(
@@ -150,7 +150,7 @@ def set_vm_state(
                     message="VM is already suspended",
                     exit_code=0,
                     error="",
-                    vm=vmDetails.vm,
+                    vm=vmDetails.raw_result,
                 )
         cmd: List[str] = [
             get_prlctl_command(),
@@ -193,7 +193,7 @@ def set_vm_state(
                     )
                     if result.returncode == 0:
                         break
-                except Exception as e:
+                except Exception:
                     pass
                 time.sleep(1)
                 waitFor -= 1
@@ -203,7 +203,7 @@ def set_vm_state(
             message="VM state set successfully",
             exit_code=0,
             error="",
-            vm=vmDetails.vm,
+            vm=vmDetails.raw_result,
         )
     except Exception as e:
         return SetVmStateResult(

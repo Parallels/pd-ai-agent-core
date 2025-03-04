@@ -9,7 +9,7 @@ from messages.notification_message import (
     create_error_notification_message,
 )
 from .helpers import get_prlctl_command
-from datasource import VirtualMachineDataSource
+from .datasource import VirtualMachineDataSource
 import logging
 from .models.operation_result import OperationResult
 
@@ -67,11 +67,11 @@ async def reboot_vm(session_id: str, vm_id: str, message: Message) -> OperationR
                 session_id=session_id,
                 channel=vm_id,
                 message="VM not found",
-                details=f"The VM was not found",
+                details="The VM was not found",
             )
             opResult = OperationResult(
                 success=False,
-                message=f"VM not found",
+                message="VM not found",
                 exit_code=result.returncode,
                 error=result.stderr,
             )
@@ -83,7 +83,7 @@ async def reboot_vm(session_id: str, vm_id: str, message: Message) -> OperationR
             session_id=session_id,
             channel=vm_id,
             message=f"Error restarting VM: {e}",
-            details=f"The VM was not restarted successfully",
+            details="The VM was not restarted successfully",
         )
         await notifications.send(error_message)
         opResult = OperationResult(

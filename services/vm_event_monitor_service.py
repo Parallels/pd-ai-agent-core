@@ -18,12 +18,13 @@ from events.prlctl_event_item import PrlctlEventItem
 import os
 import pty
 from messages.event_message import create_event_message
+from parallels_desktop.datasource import VirtualMachineDataSource
+from parallels_desktop.get_vms import get_vms, get_vm
+from parallels_desktop.vm_parser import parse_vm_json
 from core_types.session_service import SessionService
-from services.background_service import BackgroundService
-from pd.datasource import VirtualMachineDataSource
-from pd.get_vms import get_vms, get_vm
-from pd.vm_parser import parse_vm_json
-from messages import (
+from .background_service import BackgroundAgentService
+from parallels_desktop.helpers import get_prlctl_command
+from messages.constants import (
     VM_STATE_STARTED,
     VM_STATE_STOPPED,
     VM_STATE_SUSPENDED,
@@ -31,8 +32,6 @@ from messages import (
     VM_STATE_CHANGED,
     VM_SYNC_SCREENSHOT,
 )
-from pd.helpers import get_prlctl_command
-
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,7 @@ class VmEventMonitorService(SessionService):
             session_id, LOGGER_SERVICE_NAME, LogService
         )
         background_service = ServiceRegistry.get(
-            session_id, BACKGROUND_SERVICE_NAME, BackgroundService
+            session_id, BACKGROUND_SERVICE_NAME, BackgroundAgentService
         )
         if notifications_service is None:
             raise ValueError(f"Notification service not found for session {session_id}")
@@ -283,7 +282,7 @@ class VmEventMonitorService(SessionService):
                 event_type = "vm_added"
                 vms = get_vms()
                 if vms.success:
-                    for vm in vms.vms:
+                    for vm in vms.vm:
                         vm_model = parse_vm_json(vm)
                         self.datasource.update_vm(vm_model)
                 new_vm = get_vm(event_item.vm_id)

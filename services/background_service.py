@@ -138,7 +138,7 @@ class BackgroundAgentService(SessionService):
 
     async def _run_agent_timer(self, agent: BackgroundAgent):
         """Run the agent's process function at specified intervals"""
-        key = (agent.session_id, agent.agent_type)
+        # key = (agent.session_id, agent.agent_type)
         while True:
             if agent.interval is None:
                 await asyncio.sleep(0)

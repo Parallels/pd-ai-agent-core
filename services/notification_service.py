@@ -1,4 +1,4 @@
-from typing import Set, Optional, ClassVar, Dict, Any
+from typing import Optional, Dict, Any
 from messages.message import Message
 from websockets.legacy.server import WebSocketServerProtocol
 import json
@@ -12,7 +12,6 @@ import asyncio
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
-import time
 from common.constants import GLOBAL_CHANNEL, NOTIFICATION_SERVICE_NAME
 from core_types.session_service import SessionService
 from .service_registry import ServiceRegistry

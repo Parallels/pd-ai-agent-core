@@ -1,6 +1,5 @@
 from typing import Dict, Any, Optional, List
 from datetime import datetime
-from typing import Optional
 from websockets.server import WebSocketServerProtocol
 from core_types.session_channel import SessionChannel, ChannelStatus
 from common.constants import GLOBAL_CHANNEL
