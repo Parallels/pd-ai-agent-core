@@ -24,7 +24,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Parallels/pd-ai-agent-core",
-    packages=find_packages(exclude=["tests*"]),
+    packages=find_packages(
+        include=["pd_ai_agent_core", "pd_ai_agent_core.*"], exclude=["tests*"]
+    ),
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
