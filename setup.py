@@ -4,7 +4,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 # Define requirements directly
-requirements = ["pydantic>=1.10.0,<2.0.0", "typing-extensions>=4.0.0"]
+requirements = [
+    "websockets>=13.0.0",
+    "pydantic>=1.10.0,<2.0.0",
+    "typing-extensions>=4.0.0",
+    "semver>=3.0.0",
+    "easyocr",
+    "opencv-python",
+    "matplotlib",
+    "numpy",
+]
 
 setup(
     name="pd-ai-agent-core",
