@@ -35,7 +35,7 @@ class VirtualMachineDataSource:
         self._cache_duration = timedelta(seconds=300)  # cache for 5 minutes
         vms = get_vms_from_prlctl()
         if vms.success:
-            for vm in vms.vms:
+            for vm in vms.raw_result:
                 vm_model = parse_vm_json(vm)
                 self._vms[vm_model.id] = vm_model
 

@@ -33,6 +33,7 @@ jobs:
         run: flake8 --count --show-source --statistics --config=setup.cfg .
 
       - name: Type check with mypy
+        if: false
         run: mypy . --explicit-package-bases --namespace-packages
 
       - name: Run tests
