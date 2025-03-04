@@ -100,3 +100,16 @@ jobs:
             --base main \
             --head $BRANCH_NAME
           gh pr edit $PR_URL --add-label "release-request"
+
+      - name: Cleanup on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+          VERSION: ${{ steps.version_check.outputs.new_version }}
+        run: |
+          # Check if the release branch exists
+          if git ls-remote --heads origin "release/v${VERSION}" | grep -q "release/v${VERSION}"; then
+            # Delete the branch if it exists
+            git push origin --delete "release/v${VERSION}"
+            echo "Cleaned up release/v${VERSION} branch"
+          fi
