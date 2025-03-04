@@ -80,24 +80,23 @@ jobs:
           # Create a new branch for the version bump
           NEW_VERSION=${{ steps.version_check.outputs.new_version }}
           BRANCH_NAME="release/v${NEW_VERSION}"
+          chmod +x .github/scripts/generate_changelog.sh
+          .github/scripts/generate_changelog.sh --version ${{ steps.version_check.outputs.new_version }}
 
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git checkout -b $BRANCH_NAME
 
           # Commit changes to the new branch
-          git add VERSION setup.py
-          git commit -m "chore: bump version to ${NEW_VERSION}"
+          git add VERSION setup.py CHANGELOG.md
+          git commit -m "Bump version to ${NEW_VERSION}"
           git push -u origin $BRANCH_NAME
 
+          .github/scripts/generate_changelog.sh --version ${{ steps.version_check.outputs.new_version }} --mode RELEASE --output-to-file
           # Create a pull request
-          PR_URL=$(gh pr create --title "Release v${NEW_VERSION}" \
-            --body "This PR bumps the version to ${NEW_VERSION}. 
-            
-            ## Changelog
-            ${CHANGELOG}" \
+          gh pr create \
+            --title "Release v${NEW_VERSION}" \
+            --body-file release_notes.md \
             --base main \
-            --head $BRANCH_NAME)
-
-          echo "pr_url=${PR_URL}" >> $GITHUB_OUTPUT
-          echo "Created PR: ${PR_URL}"
+            --head release/$NEW_VERSION
+          gh pr edit $PR_URL --add-label "release-request"

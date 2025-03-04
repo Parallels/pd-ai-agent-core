@@ -6,6 +6,8 @@ RELEASE_NOTES_FILE="release_notes.md"
 OUTPUT_TO_FILE="FALSE"
 VERBOSE="FALSE"
 MODE="GENERATE"
+REPO_NAME="https://github.com/Parallels/pd-ai-agent-core"
+
 while [[ $# -gt 0 ]]; do
   case $1 in
   -m)
@@ -66,6 +68,10 @@ done
 function generate_release_notes() {
   #get when the last release was merged
   LAST_RELEASE_MERGED_AT=$(gh pr list --repo "$REPO_NAME" --base main --json mergedAt --state merged --search "label:release-request" | jq -r '.[0].mergedAt')
+  if [ "$LAST_RELEASE_MERGED_AT" = "null" ]; then
+    # If there's no previous release, use the earliest commit date
+    LAST_RELEASE_MERGED_AT=$(git log --reverse --format=%cI | head -n 1)
+  fi
   CHANGELIST=$(gh pr list --repo "$REPO_NAME" --base main --state merged --json body --search "merged:>$LAST_RELEASE_MERGED_AT -label:release-request")
 
   temp_file=$(mktemp)
