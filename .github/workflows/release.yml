@@ -98,5 +98,5 @@ jobs:
             --title "Release v${NEW_VERSION}" \
             --body-file release_notes.md \
             --base main \
-            --head release/$NEW_VERSION
+            --head $BRANCH_NAME
           gh pr edit $PR_URL --add-label "release-request"
