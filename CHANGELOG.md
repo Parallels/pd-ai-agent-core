@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-03-05
+
+- Added a way to export a VirtualMachine to a dict for use in the chat agents
+- fixed an issue with the changelog.md
+- Added a way to export a VirtualMachine to a dict for use in the chat agents
+- fixed an issue with the changelog.md
+
 ## [0.1.0] - 2025-03-05
 
 - Added a service for the vms datasource so any other service can access it
