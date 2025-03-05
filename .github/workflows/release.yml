@@ -59,18 +59,6 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "current_version=$SETUP_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Generate Changelog
-        if: steps.version_check.outputs.new_version != ''
-        id: changelog
-        env:
-          GH_TOKEN: ${{ secrets.PAT }}
-        run: |
-          chmod +x .github/scripts/generate_changelog.sh
-          CHANGELOG=$(.github/scripts/generate_changelog.sh --version ${{ steps.version_check.outputs.new_version }})
-          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          echo "$CHANGELOG" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-
       - name: Create branch and PR for version bump
         if: steps.version_check.outputs.new_version != ''
         id: create_pr
