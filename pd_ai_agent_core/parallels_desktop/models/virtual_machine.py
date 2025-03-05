@@ -1,4 +1,5 @@
 from typing import Dict, Any, Optional, List
+import json
 
 
 class Advanced:
@@ -29,6 +30,16 @@ class Advanced:
             if "Rosetta Linux" in advanced:
                 self.rosetta_linux = advanced["Rosetta Linux"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "vm_hostname_synchronization": self.vm_hostname_synchronization,
+            "public_ssh_keys_synchronization": self.public_ssh_keys_synchronization,
+            "show_developer_tools": self.show_developer_tools,
+            "swipe_from_edges": self.swipe_from_edges,
+            "share_host_location": self.share_host_location,
+            "rosetta_linux": self.rosetta_linux,
+        }
+
 
 class Coherence:
     show_windows_systray_in_mac_menu: str
@@ -46,6 +57,12 @@ class Coherence:
                     "Auto-switch to full screen"
                 ]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "show_windows_systray_in_mac_menu": self.show_windows_systray_in_mac_menu,
+            "auto_switch_to_full_screen": self.auto_switch_to_full_screen,
+        }
+
 
 class SmartGuard:
     enabled: bool
@@ -56,6 +73,11 @@ class SmartGuard:
             if "enabled" in smart_guard:
                 self.enabled = smart_guard["enabled"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+        }
+
 
 class Expiration:
     enabled: bool
@@ -65,6 +87,11 @@ class Expiration:
             smart_guard = data["Smart Guard"]
             if "enabled" in smart_guard:
                 self.enabled = smart_guard["enabled"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+        }
 
 
 class Fullscreen:
@@ -88,6 +115,15 @@ class Fullscreen:
             if "Scale view mode" in fullscreen:
                 self.scale_view_mode = fullscreen["Scale view mode"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "use_all_displays": self.use_all_displays,
+            "activate_spaces_on_click": self.activate_spaces_on_click,
+            "optimize_for_games": self.optimize_for_games,
+            "gamma_control": self.gamma_control,
+            "scale_view_mode": self.scale_view_mode,
+        }
+
 
 class GuestTools:
     state: str
@@ -100,6 +136,12 @@ class GuestTools:
                 self.state = guest_tools["state"]
             if "version" in guest_tools:
                 self.version = guest_tools["version"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "state": self.state,
+            "version": self.version,
+        }
 
 
 class Cdrom0:
@@ -122,6 +164,14 @@ class Cdrom0:
                 if "state" in cdrom0:
                     self.state = cdrom0["state"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "port": self.port,
+            "image": self.image,
+            "state": self.state,
+        }
+
 
 class Usb:
     enabled: bool
@@ -133,6 +183,11 @@ class Usb:
                 usb = hardware["usb"]
                 if "enabled" in usb:
                     self.enabled = usb["enabled"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+        }
 
 
 class CPU:
@@ -164,6 +219,17 @@ class CPU:
                 if "type" in cpu:
                     self.type = cpu["type"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "cpus": self.cpus,
+            "auto": self.auto,
+            "vt_x": self.vt_x,
+            "hotplug": self.hotplug,
+            "accl": self.accl,
+            "mode": self.mode,
+            "type": self.type,
+        }
+
 
 class Hdd0:
     enabled: bool
@@ -191,6 +257,16 @@ class Hdd0:
                 if "online_compact" in hdd0:
                     self.online_compact = hdd0["online_compact"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "port": self.port,
+            "image": self.image,
+            "type": self.type,
+            "size": self.size,
+            "online_compact": self.online_compact,
+        }
+
 
 class Memory:
     size: str
@@ -209,6 +285,13 @@ class Memory:
                 if "hotplug" in memory:
                     self.hotplug = memory["hotplug"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "size": self.size,
+            "auto": self.auto,
+            "hotplug": self.hotplug,
+        }
+
 
 class MemoryQuota:
     auto: str
@@ -220,6 +303,11 @@ class MemoryQuota:
                 memory_quota = hardware["memory_quota"]
                 if "auto" in memory_quota:
                     self.auto = memory_quota["auto"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "auto": self.auto,
+        }
 
 
 class Net0:
@@ -248,6 +336,16 @@ class Net0:
                 if "iface" in net0:
                     self.iface = net0["iface"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "type": self.type,
+            "mac": self.mac,
+            "card": self.card,
+            "dhcp": self.dhcp,
+            "iface": self.iface,
+        }
+
 
 class Sound0:
     enabled: bool
@@ -265,6 +363,13 @@ class Sound0:
                     self.output = sound0["output"]
                 if "mixer" in sound0:
                     self.mixer = sound0["mixer"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "output": self.output,
+            "mixer": self.mixer,
+        }
 
 
 class Video:
@@ -298,6 +403,18 @@ class Video:
                     self.native_scaling_in_guest = video["native-scaling-in-guest"]
                 if "automatic-video-memory" in video:
                     self.automatic_video_memory = video["automatic-video-memory"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "adapter_type": self.adapter_type,
+            "size": self.size,
+            "the_3_d_acceleration": self.the_3_d_acceleration,
+            "vertical_sync": self.vertical_sync,
+            "high_resolution": self.high_resolution,
+            "high_resolution_in_guest": self.high_resolution_in_guest,
+            "native_scaling_in_guest": self.native_scaling_in_guest,
+            "automatic_video_memory": self.automatic_video_memory,
+        }
 
 
 class Hardware:
@@ -333,6 +450,19 @@ class Hardware:
         self.net0 = net0
         self.sound0 = sound0
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "cpu": self.cpu.to_dict(),
+            "memory": self.memory.to_dict(),
+            "video": self.video.to_dict(),
+            "memory_quota": self.memory_quota.to_dict(),
+            "hdd0": self.hdd0.to_dict(),
+            "cdrom0": self.cdrom0.to_dict(),
+            "usb": self.usb.to_dict(),
+            "net0": self.net0.to_dict(),
+            "sound0": self.sound0.to_dict(),
+        }
+
 
 class HostSharedFolders:
     enabled: bool
@@ -342,6 +472,11 @@ class HostSharedFolders:
             host_shared_folders = data["Host Shared Folders"]
             if "enabled" in host_shared_folders:
                 self.enabled = host_shared_folders["enabled"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+        }
 
 
 class MiscellaneousSharing:
@@ -357,6 +492,12 @@ class MiscellaneousSharing:
                 ]
             if "Shared cloud" in miscellaneous_sharing:
                 self.shared_cloud = miscellaneous_sharing["Shared cloud"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "shared_clipboard_mode": self.shared_clipboard_mode,
+            "shared_cloud": self.shared_cloud,
+        }
 
 
 class Modality:
@@ -376,6 +517,14 @@ class Modality:
                 self.show_on_all_spaces = modality["Show on all spaces"]
             if "Capture mouse clicks" in modality:
                 self.capture_mouse_clicks = modality["Capture mouse clicks"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "opacity_percentage": self.opacity_percentage,
+            "stay_on_top": self.stay_on_top,
+            "show_on_all_spaces": self.show_on_all_spaces,
+            "capture_mouse_clicks": self.capture_mouse_clicks,
+        }
 
 
 class MouseAndKeyboard:
@@ -400,6 +549,14 @@ class MouseAndKeyboard:
                     "Keyboard optimization mode"
                 ]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "smart_mouse_optimized_for_games": self.smart_mouse_optimized_for_games,
+            "sticky_mouse": self.sticky_mouse,
+            "smooth_scrolling": self.smooth_scrolling,
+            "keyboard_optimization_mode": self.keyboard_optimization_mode,
+        }
+
 
 class IPAddress:
     type: str
@@ -408,6 +565,12 @@ class IPAddress:
     def __init__(self, type: str, ip: str) -> None:
         self.type = type
         self.ip = ip
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "type": self.type,
+            "ip": self.ip,
+        }
 
 
 class IPAddresses:
@@ -427,12 +590,22 @@ class IPAddresses:
                         ip = ip_address["ip"]
                     self.ip_addresses.append(IPAddress(type=type, ip=ip))
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "ip_addresses": [ip.to_dict() for ip in self.ip_addresses],
+        }
+
 
 class Network:
     ip_addresses: IPAddresses
 
     def __init__(self, ip_addresses: IPAddresses) -> None:
         self.ip_addresses = ip_addresses
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "ip_addresses": self.ip_addresses.to_dict(),
+        }
 
 
 class Optimization:
@@ -473,6 +646,20 @@ class Optimization:
             if "Resource quota" in optimization:
                 self.resource_quota = optimization["Resource quota"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "faster_virtual_machine": self.faster_virtual_machine,
+            "hypervisor_type": self.hypervisor_type,
+            "adaptive_hypervisor": self.adaptive_hypervisor,
+            "disabled_windows_logo": self.disabled_windows_logo,
+            "auto_compress_virtual_disks": self.auto_compress_virtual_disks,
+            "nested_virtualization": self.nested_virtualization,
+            "pmu_virtualization": self.pmu_virtualization,
+            "longer_battery_life": self.longer_battery_life,
+            "show_battery_status": self.show_battery_status,
+            "resource_quota": self.resource_quota,
+        }
+
 
 class PrintManagement:
     synchronize_with_host_printers: str
@@ -488,6 +675,13 @@ class PrintManagement:
         self.synchronize_with_host_printers = synchronize_with_host_printers
         self.synchronize_default_printer = synchronize_default_printer
         self.show_host_printer_ui = show_host_printer_ui
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "synchronize_with_host_printers": self.synchronize_with_host_printers,
+            "synchronize_default_printer": self.synchronize_default_printer,
+            "show_host_printer_ui": self.show_host_printer_ui,
+        }
 
 
 class Security:
@@ -520,6 +714,18 @@ class Security:
             if "Packed" in security:
                 self.packed = security["Packed"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "encrypted": self.encrypted,
+            "tpm_enabled": self.tpm_enabled,
+            "tpm_type": self.tpm_type,
+            "custom_password_protection": self.custom_password_protection,
+            "configuration_is_locked": self.configuration_is_locked,
+            "protected": self.protected,
+            "archived": self.archived,
+            "packed": self.packed,
+        }
+
 
 class SharedProfile:
     enabled: bool
@@ -529,6 +735,11 @@ class SharedProfile:
             shared_profile = data["Shared Profile"]
             if "enabled" in shared_profile:
                 self.enabled = shared_profile["enabled"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+        }
 
 
 class SharedApplications:
@@ -565,6 +776,16 @@ class SharedApplications:
                     "Bounce dock icon when app flashes"
                 ]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "host_to_guest_apps_sharing": self.host_to_guest_apps_sharing,
+            "guest_to_host_apps_sharing": self.guest_to_host_apps_sharing,
+            "show_guest_apps_folder_in_dock": self.show_guest_apps_folder_in_dock,
+            "show_guest_notifications": self.show_guest_notifications,
+            "bounce_dock_icon_when_app_flashes": self.bounce_dock_icon_when_app_flashes,
+        }
+
 
 class SmartMount:
     enabled: bool
@@ -574,6 +795,11 @@ class SmartMount:
             smart_mount = data["SmartMount"]
             if "enabled" in smart_mount:
                 self.enabled = smart_mount["enabled"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+        }
 
 
 class SMBIOSSettings:
@@ -590,6 +816,13 @@ class SMBIOSSettings:
                 self.system_serial_number = smbios_settings["System serial number"]
             if "Board manufacturer" in smbios_settings:
                 self.board_manufacturer = smbios_settings["Board manufacturer"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "bios_version": self.bios_version,
+            "system_serial_number": self.system_serial_number,
+            "board_manufacturer": self.board_manufacturer,
+        }
 
 
 class StartupAndShutdown:
@@ -622,6 +855,18 @@ class StartupAndShutdown:
             if "Undo disks" in startup_and_shutdown:
                 self.undo_disks = startup_and_shutdown["Undo disks"]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "autostart": self.autostart,
+            "autostart_delay": self.autostart_delay,
+            "autostop": self.autostop,
+            "startup_view": self.startup_view,
+            "on_shutdown": self.on_shutdown,
+            "on_window_close": self.on_window_close,
+            "pause_idle": self.pause_idle,
+            "undo_disks": self.undo_disks,
+        }
+
 
 class TimeSynchronization:
     enabled: bool
@@ -643,6 +888,14 @@ class TimeSynchronization:
                     "Timezone synchronization disabled"
                 ]
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enabled": self.enabled,
+            "smart_mode": self.smart_mode,
+            "interval_in_seconds": self.interval_in_seconds,
+            "timezone_synchronization_disabled": self.timezone_synchronization_disabled,
+        }
+
 
 class TravelMode:
     enter_condition: str
@@ -658,6 +911,13 @@ class TravelMode:
                 self.enter_threshold = travel_mode["Enter threshold"]
             if "Quit condition" in travel_mode:
                 self.quit_condition = travel_mode["Quit condition"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "enter_condition": self.enter_condition,
+            "enter_threshold": self.enter_threshold,
+            "quit_condition": self.quit_condition,
+        }
 
 
 class USBAndBluetooth:
@@ -688,6 +948,15 @@ class USBAndBluetooth:
                 ]
             if "support_usb_30" in usb_and_bluetooth:
                 self.support_usb_30 = usb_and_bluetooth["support_usb_30"]
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "automatic_sharing_cameras": self.automatic_sharing_cameras,
+            "automatic_sharing_bluetooth": self.automatic_sharing_bluetooth,
+            "automatic_sharing_smart_cards": self.automatic_sharing_smart_cards,
+            "automatic_sharing_gamepads": self.automatic_sharing_gamepads,
+            "support_usb_30": self.support_usb_30,
+        }
 
 
 class VirtualMachine:
@@ -822,9 +1091,66 @@ class VirtualMachine:
         self.print_management = print_management
         self.guest_shared_folders = guest_shared_folders
 
-    def to_dict(self) -> dict:
-        return {
+    def to_dict(self) -> Dict[str, Any]:
+        result = {
             "id": self.id,
             "name": self.name,
             "description": self.description,
+            "type": self.type,
+            "state": self.state,
+            "os": self.os,
+            "template": self.template,
+            "uptime": self.uptime,
+            "home_path": self.home_path,
+            "home": self.home,
+            "restore_image": self.restore_image,
+            "screenshot": self.screenshot,
+            "guest_tools": self.guest_tools.to_dict(),
+            "mouse_and_keyboard": self.mouse_and_keyboard.to_dict(),
+            "usb_and_bluetooth": self.usb_and_bluetooth.to_dict(),
+            "startup_and_shutdown": self.startup_and_shutdown.to_dict(),
+            "optimization": self.optimization.to_dict(),
+            "travel_mode": self.travel_mode.to_dict(),
+            "security": self.security.to_dict(),
+            "smart_guard": self.smart_guard.to_dict(),
+            "modality": self.modality.to_dict(),
+            "fullscreen": self.fullscreen.to_dict(),
+            "coherence": self.coherence.to_dict(),
+            "time_synchronization": self.time_synchronization.to_dict(),
+            "expiration": self.expiration.to_dict(),
+            "boot_order": self.boot_order,
+            "bios_type": self.bios_type,
+            "efi_secure_boot": self.efi_secure_boot,
+            "allow_select_boot_device": self.allow_select_boot_device,
+            "external_boot_device": self.external_boot_device,
+            "smbios_settings": self.smbios_settings.to_dict(),
+            "hardware": self.hardware.to_dict(),
+            "host_shared_folders": self.host_shared_folders.to_dict(),
+            "host_defined_sharing": self.host_defined_sharing,
+            "shared_profile": self.shared_profile.to_dict(),
+            "shared_applications": self.shared_applications.to_dict(),
+            "smart_mount": self.smart_mount.to_dict(),
+            "network": self.network.to_dict(),
+            "miscellaneous_sharing": self.miscellaneous_sharing.to_dict(),
+            "advanced": self.advanced.to_dict(),
         }
+
+        # Add optional fields if they exist
+        if self.print_management:
+            result["print_management"] = self.print_management.to_dict()
+        if self.guest_shared_folders:
+            result["guest_shared_folders"] = self.guest_shared_folders.to_dict()
+
+        return result
+
+    def to_json(self, indent: Optional[int] = None) -> str:
+        """
+        Convert the VirtualMachine object to a JSON string.
+
+        Args:
+            indent: Number of spaces for indentation in the JSON output. If None, the output will be compact.
+
+        Returns:
+            A JSON string representation of the VirtualMachine.
+        """
+        return json.dumps(self.to_dict(), indent=indent)

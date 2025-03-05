@@ -7,18 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a service for the vms datasource so any other service can access it
 - Added a function descriptor to help describe the function to the UI
-- Added a service for the vms datasource so any other service can access it
-- Added a function descriptor to help describe the function to the UI
 
 ## [0.0.4] - 2025-03-04
 
 - refactored the package structure to avoid conflicts
-- refactored the package structure to avoid conflicts
 
 ## [0.0.3] - 2025-03-04
 
-- added all of the classes that need to be in a package into this
-- Added some initial types for testing deployment
 - added all of the classes that need to be in a package into this
 - Added some initial types for testing deployment
 
