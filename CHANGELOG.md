@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.0] - 2025-03-05
+
+- Added a service for the vms datasource so any other service can access it
+- Added a function descriptor to help describe the function to the UI
+- Added a service for the vms datasource so any other service can access it
+- Added a function descriptor to help describe the function to the UI
+
 ## [0.0.4] - 2025-03-04
 
 - refactored the package structure to avoid conflicts
