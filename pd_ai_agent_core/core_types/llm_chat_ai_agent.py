@@ -14,6 +14,18 @@ class DataResult:
     context_variables: Dict[str, Any] = dict()
 
 
+class AgentFunctionDescriptor:
+    name: str
+    description: str
+
+    def __init__(self, name: str, description: str):
+        self.name = name
+        self.description = description
+
+    def get_string(self) -> str:
+        return f"{normalize_string(self.name)}::{self.description}"
+
+
 class LlmChatAgent:
     def __init__(
         self,
@@ -22,6 +34,7 @@ class LlmChatAgent:
         description: Optional[str] = None,
         model: str = DEFAULT_MODEL,
         functions: List[AgentFunction] = [],
+        function_descriptions: List[AgentFunctionDescriptor] = [],
         parallel_tool_calls: bool = True,
         transfer_instructions: Optional[str] = None,
         icon: Optional[Union[str, HttpUrl]] = None,
@@ -33,6 +46,7 @@ class LlmChatAgent:
         self.instructions = instructions
         self.model = model
         self.functions = functions or []
+        self.function_descriptions = function_descriptions or []
         self.parallel_tool_calls = parallel_tool_calls
         self.transfer_instructions = transfer_instructions
         self.icon = icon
