@@ -2,7 +2,6 @@ from pd_ai_agent_core.parallels_desktop.get_vm_screenshot import get_vm_screensh
 from pd_ai_agent_core.parallels_desktop.models.get_vm_result import GetVmResult
 from pd_ai_agent_core.parallels_desktop.models.get_vms_result import GetVmsResult
 from pd_ai_agent_core.parallels_desktop.datasource import VirtualMachineDataSource
-import json
 
 
 def get_vms(take_screenshot: bool = False) -> GetVmResult:
