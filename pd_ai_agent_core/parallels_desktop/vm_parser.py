@@ -32,7 +32,6 @@ from pd_ai_agent_core.parallels_desktop.models.virtual_machine import (
     Usb,
     SharedProfile,
     SmartMount,
-    IPAddresses,
 )
 
 
@@ -107,9 +106,7 @@ def parse_vm_json(data: Dict[str, Any]) -> VirtualMachine:
 
     smart_mount = SmartMount(data=data)
 
-    ip_addresses = IPAddresses(data=data)
-
-    network = Network(ip_addresses=ip_addresses)
+    network = Network(data=data)
 
     misc_sharing = MiscellaneousSharing(data=data)
 

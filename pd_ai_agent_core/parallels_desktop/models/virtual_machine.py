@@ -89,10 +89,10 @@ class Expiration:
     enabled: bool
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "Smart Guard" in data:
-            smart_guard = data["Smart Guard"]
-            if "enabled" in smart_guard:
-                self.enabled = smart_guard["enabled"]
+        if "Expiration" in data:
+            expiration = data["Expiration"]
+            if "enabled" in expiration:
+                self.enabled = expiration["enabled"]
 
     def to_dict(self) -> Dict[str, Any]:
         result = {}
@@ -141,8 +141,8 @@ class GuestTools:
     version: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "Guest Tools" in data:
-            guest_tools = data["Guest Tools"]
+        if "GuestTools" in data:
+            guest_tools = data["GuestTools"]
             if "state" in guest_tools:
                 self.state = guest_tools["state"]
             if "version" in guest_tools:
@@ -552,8 +552,8 @@ class MouseAndKeyboard:
     keyboard_optimization_mode: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "mouse_and_keyboard" in data:
-            mouse_and_keyboard = data["mouse_and_keyboard"]
+        if "Mouse and Keyboard" in data:
+            mouse_and_keyboard = data["Mouse and Keyboard"]
             if "Smart mouse optimized for games" in mouse_and_keyboard:
                 self.smart_mouse_optimized_for_games = mouse_and_keyboard[
                     "Smart mouse optimized for games"
@@ -604,6 +604,7 @@ class IPAddresses:
             network = data["Network"]
             if "ipAddresses" in network:
                 ip_addresses = network["ipAddresses"]
+
                 for ip_address in ip_addresses:
                     type = ""
                     ip = ""
@@ -612,6 +613,8 @@ class IPAddresses:
                     if "ip" in ip_address:
                         ip = ip_address["ip"]
                     self.ip_addresses.append(IPAddress(type=type, ip=ip))
+            else:
+                self.ip_addresses = []
 
     def to_dict(self) -> Dict[str, Any]:
         result = {}
@@ -622,16 +625,73 @@ class IPAddresses:
         return result
 
 
-class Network:
-    ip_addresses: IPAddresses
+class NetworkConditioner:
+    bandwidth: str
+    packet_loss: str
+    delay: str
 
-    def __init__(self, ip_addresses: IPAddresses) -> None:
-        self.ip_addresses = ip_addresses
+    def __init__(self, data: Dict[str, Any]) -> None:
+        if "Bandwidth" in data:
+            self.bandwidth = data["Bandwidth"]
+        if "Packet Loss" in data:
+            self.packet_loss = data["Packet Loss"]
+        if "Delay" in data:
+            self.delay = data["Delay"]
 
     def to_dict(self) -> Dict[str, Any]:
         result = {}
-        if hasattr(self, "ip_addresses") and self.ip_addresses is not None:
-            result["ip_addresses"] = self.ip_addresses.to_dict()
+        if hasattr(self, "bandwidth"):
+            result["bandwidth"] = self.bandwidth
+        if hasattr(self, "packet_loss"):
+            result["packet_loss"] = self.packet_loss
+        if hasattr(self, "delay"):
+            result["delay"] = self.delay
+        return result
+
+
+class Network:
+    conditioned: str
+    ip_addresses: List[IPAddress] = []
+    inbound: NetworkConditioner
+    outbound: NetworkConditioner
+
+    def __init__(self, data: Dict[str, Any]) -> None:
+        if "Network" in data:
+            network = data["Network"]
+            if "Conditioned" in network:
+                self.conditioned = network["Conditioned"]
+            if "ipAddresses" in network:
+                ipAddresses = (
+                    network["ipAddresses"]
+                    if isinstance(network["ipAddresses"], list)
+                    else []
+                )
+                for ipaddress in ipAddresses:
+                    if "type" in ipaddress:
+                        type = ipaddress["type"]
+                    if "ip" in ipaddress:
+                        ip = ipaddress["ip"]
+                    self.ip_addresses.append(IPAddress(type=type, ip=ip))
+
+            if "Inbound" in network:
+                inbound = NetworkConditioner(network["Inbound"])
+                self.inbound = inbound
+            if "Outbound" in network:
+                outbound = NetworkConditioner(network["Outbound"])
+                self.outbound = outbound
+
+    def to_dict(self) -> Dict[str, Any]:
+        result = {}
+        if hasattr(self, "ip_addresses"):
+            result["ip_addresses"] = [
+                ip.to_dict() for ip in self.ip_addresses if ip is not None
+            ]
+        if hasattr(self, "conditioned"):
+            result["conditioned"] = self.conditioned
+        if hasattr(self, "inbound"):
+            result["inbound"] = self.inbound.to_dict()
+        if hasattr(self, "outbound"):
+            result["outbound"] = self.outbound.to_dict()
         return result
 
 
@@ -648,8 +708,8 @@ class Optimization:
     resource_quota: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "optimization" in data:
-            optimization = data["optimization"]
+        if "Optimization" in data:
+            optimization = data["Optimization"]
             if "Faster virtual machine" in optimization:
                 self.faster_virtual_machine = optimization["Faster virtual machine"]
             if "Hypervisor type" in optimization:
@@ -730,8 +790,8 @@ class Security:
     packed: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "security" in data:
-            security = data["security"]
+        if "Security" in data:
+            security = data["Security"]
             if "Encrypted" in security:
                 self.encrypted = security["Encrypted"]
             if "TPM enabled" in security:
@@ -881,8 +941,8 @@ class StartupAndShutdown:
     undo_disks: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "startup_and_shutdown" in data:
-            startup_and_shutdown = data["startup_and_shutdown"]
+        if "Startup and Shutdown" in data:
+            startup_and_shutdown = data["Startup and Shutdown"]
             if "Autostart" in startup_and_shutdown:
                 self.autostart = startup_and_shutdown["Autostart"]
             if "Autostart delay" in startup_and_shutdown:
@@ -956,8 +1016,8 @@ class TravelMode:
     quit_condition: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "travel_mode" in data:
-            travel_mode = data["travel_mode"]
+        if "Travel mode" in data:
+            travel_mode = data["Travel mode"]
             if "Enter condition" in travel_mode:
                 self.enter_condition = travel_mode["Enter condition"]
             if "Enter threshold" in travel_mode:
@@ -981,8 +1041,8 @@ class USBAndBluetooth:
     support_usb_30: str
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        if "usb_and_bluetooth" in data:
-            usb_and_bluetooth = data["usb_and_bluetooth"]
+        if "USB and Bluetooth" in data:
+            usb_and_bluetooth = data["USB and Bluetooth"]
             if "automatic_sharing_cameras" in usb_and_bluetooth:
                 self.automatic_sharing_cameras = usb_and_bluetooth[
                     "automatic_sharing_cameras"
