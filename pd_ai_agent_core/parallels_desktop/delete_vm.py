@@ -23,7 +23,7 @@ def delete_vm(vm_id: str) -> DeleteVmResult:
                 exit_code=vmResult.exit_code,
                 error=vmResult.error,
             )
-        if vmResult.raw_result["State"] == "running":
+        if vmResult.vm.state == "running":
             return DeleteVmResult(
                 success=False,
                 message="VM is running",

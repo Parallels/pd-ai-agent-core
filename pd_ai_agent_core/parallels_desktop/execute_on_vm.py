@@ -18,7 +18,7 @@ def execute_on_vm(
             return ExecuteVmCommandResult(
                 error=vm_details.message, exit_code=vm_details.exit_code
             )
-        if vm_details.raw_result["State"] != "running":
+        if vm_details.vm.state != "running":
             return ExecuteVmCommandResult(error="VM is not running", exit_code=1)
     except Exception as e:
         return ExecuteVmCommandResult(error=str(e), exit_code=1)
