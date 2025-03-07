@@ -6,3 +6,4 @@ easyocr
 opencv-python
 matplotlib
 numpy
+pillow

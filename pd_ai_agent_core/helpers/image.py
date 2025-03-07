@@ -3,8 +3,85 @@ import numpy as np
 from collections import Counter
 import base64
 import logging
+import io
 
 logger = logging.getLogger(__name__)
+
+# Try to import PIL - this will be needed for optimize_image
+try:
+    from PIL import Image
+
+    PILLOW_AVAILABLE = True
+except ImportError:
+    PILLOW_AVAILABLE = False
+    logger.warning("PIL not available, image optimization functions will be limited")
+
+
+def optimize_image(
+    image_data: str,
+    quality: int = 60,
+    max_width: int = 800,
+    format: str = "JPEG",
+    debug: bool = False,
+) -> str:
+    """
+    Optimize an image by resizing and compressing it.
+
+    Args:
+        image_data (str): Base64 encoded image data
+        quality (int): Output image quality (0-100, JPEG only)
+        max_width (int): Maximum width in pixels (maintains aspect ratio)
+        format (str): Output format ('JPEG', 'PNG', etc.)
+        debug (bool): Whether to log debug information
+
+    Returns:
+        str: Base64 encoded optimized image
+    """
+    if not PILLOW_AVAILABLE:
+        logger.warning("PIL not available, cannot optimize image")
+        return image_data
+
+    try:
+        # Decode base64 to bytes
+        image_bytes = base64.b64decode(image_data)
+
+        # Convert to PIL Image
+        img = Image.open(io.BytesIO(image_bytes))
+
+        # Calculate new dimensions maintaining aspect ratio
+        width, height = img.size
+        if width > max_width:
+            ratio = max_width / width
+            new_width = max_width
+            new_height = int(height * ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+        # Convert to desired format with compression
+        output = io.BytesIO()
+        if format.upper() == "JPEG":
+            img = img.convert("RGB")  # JPEG doesn't support alpha channel
+            img.save(output, format=format, quality=quality, optimize=True)
+        else:
+            img.save(output, format=format, optimize=True)
+
+        output.seek(0)
+
+        # Convert back to base64
+        optimized_base64 = base64.b64encode(output.read()).decode("utf-8")
+
+        # Log size reduction
+        if debug:
+            original_size = len(image_data)
+            new_size = len(optimized_base64)
+            reduction = (1 - (new_size / original_size)) * 100
+            logger.info(
+                f"Image optimized: {original_size:,} bytes → {new_size:,} bytes ({reduction:.1f}% reduction)"
+            )
+
+        return optimized_base64
+    except Exception as e:
+        logger.error(f"Error optimizing image: {e}")
+        return image_data
 
 
 def get_dominant_border_color(
