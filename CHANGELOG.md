@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2025-03-07
+
+- Added an image optimization to reduce image size
+- Improved the notification service loop management
+
 ## [0.1.4] - 2025-03-07
 
 - Fixed an issue with the clone_vm command
