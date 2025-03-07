@@ -3,7 +3,6 @@ import numpy as np
 from collections import Counter
 import base64
 import logging
-from typing import Optional
 import io
 
 logger = logging.getLogger(__name__)
