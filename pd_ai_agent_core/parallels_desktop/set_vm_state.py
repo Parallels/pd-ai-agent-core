@@ -53,7 +53,7 @@ def set_vm_state(
                 error=vmDetails.error,
                 vm={},
             )
-        vmState = vmDetails.vm["State"]
+        vmState = vmDetails.vm.state
         desired_state = state.value.lower()
         if vmState == "running":
             if state == VirtualMachineState.START:

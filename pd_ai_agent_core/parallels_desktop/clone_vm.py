@@ -26,7 +26,7 @@ def clone_vm(vm_id: str, new_vm_name: str) -> CloneVmResult:
                 exit_code=vmResult.exit_code,
                 error=vmResult.error,
             )
-        if vmResult.vm["State"] != "running":
+        if vmResult.vm.state != "running":
             return CloneVmResult(
                 success=False,
                 message="VM is not running",
