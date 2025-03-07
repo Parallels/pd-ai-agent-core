@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2025-03-07
+
+- Fixed an issue with the clone_vm command
+- Fixed an issue with the delete_vm command
+- Fixed an issue with the execute_on_vm command
+- Fixed an issue with the get_vm_os_version command
+- Fixed and issue with the set_vm_state command
+- Fixed an issue with the execute_vm_command_result
+
 ## [0.1.3] - 2025-03-06
 
 - Fixed issues with the VirtualMachine fields
