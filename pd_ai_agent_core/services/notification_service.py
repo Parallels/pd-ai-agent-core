@@ -220,7 +220,9 @@ class NotificationService(SessionService):
             )
 
             # Wait for the operation to complete with a timeout
-            result = future.result(timeout=5.0)  # 5 seconds timeout
+            result = future.result(timeout=5.0)
+            print(result)
+            # 5 seconds timeout
 
             if self._debug and not is_compressed:
                 logger.info(f"Sent uncompressed message: {len(final_message):,} bytes")
