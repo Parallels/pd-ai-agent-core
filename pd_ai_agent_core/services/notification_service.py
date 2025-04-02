@@ -13,7 +13,6 @@ from pd_ai_agent_core.messages.error_message import create_error_message_from_me
 import logging
 import asyncio
 import threading
-from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 from pd_ai_agent_core.common.constants import GLOBAL_CHANNEL, NOTIFICATION_SERVICE_NAME
 from pd_ai_agent_core.core_types.session_service import SessionService
