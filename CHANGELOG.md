@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2025-04-02
+
+- Added the ability to have actions in the response from the agent
+
 ## [0.1.6] - 2025-03-07
 
 - Fixed an issue with the notifications service
