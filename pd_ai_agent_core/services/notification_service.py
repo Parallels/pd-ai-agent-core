@@ -13,7 +13,6 @@ from pd_ai_agent_core.messages.error_message import create_error_message_from_me
 import logging
 import asyncio
 import threading
-from concurrent.futures import ThreadPoolExecutor
 from queue import Queue
 from pd_ai_agent_core.common.constants import GLOBAL_CHANNEL, NOTIFICATION_SERVICE_NAME
 from pd_ai_agent_core.core_types.session_service import SessionService
@@ -221,7 +220,9 @@ class NotificationService(SessionService):
             )
 
             # Wait for the operation to complete with a timeout
-            result = future.result(timeout=5.0)  # 5 seconds timeout
+            result = future.result(timeout=5.0)
+            print(result)
+            # 5 seconds timeout
 
             if self._debug and not is_compressed:
                 logger.info(f"Sent uncompressed message: {len(final_message):,} bytes")

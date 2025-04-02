@@ -32,6 +32,8 @@ class LlmChatAgent:
         name: str,
         instructions: Union[str, Callable[[Dict[str, Any]], str]],
         description: Optional[str] = None,
+        args: Optional[Dict[str, Any]] = None,
+        env: Optional[Dict[str, Any]] = None,
         model: str = DEFAULT_MODEL,
         functions: List[AgentFunction] = [],
         function_descriptions: List[AgentFunctionDescriptor] = [],
@@ -51,6 +53,8 @@ class LlmChatAgent:
         self.transfer_instructions = transfer_instructions
         self.icon = icon
         self.tool_choice = tool_choice
+        self.args = args
+        self.env = env
 
 
 class LlmChatResponse(BaseModel):
@@ -80,6 +84,14 @@ class LlmChatResult(BaseModel):
         arbitrary_types_allowed = True
 
 
+class LlmChatAgentResponseAction:
+    name: str
+    description: str
+    type: str
+    value: str
+    parameters: dict
+
+
 class LlmChatAgentResponse:
     status: str
     message: str
@@ -87,6 +99,7 @@ class LlmChatAgentResponse:
     data: Optional[Union[dict, List[dict]]] = None
     agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
+    actions: List[LlmChatAgentResponseAction] = []
 
     def __init__(
         self,
@@ -96,6 +109,7 @@ class LlmChatAgentResponse:
         data: Optional[Union[dict, List[dict]]] = None,
         agent: Optional[LlmChatAgent] = None,
         context_variables: dict = {},
+        actions: List[LlmChatAgentResponseAction] = [],
     ):
         self.status = status
         self.message = message
@@ -103,6 +117,7 @@ class LlmChatAgentResponse:
         self.data = data
         self.agent = agent
         self.context_variables = context_variables
+        self.actions = actions
 
     def to_dict(self):
         return {
@@ -110,6 +125,7 @@ class LlmChatAgentResponse:
             "message": self.message,
             "error": self.error,
             "data": self.data if self.data is not None else None,
+            "actions": [action.to_dict() for action in self.actions],
         }
 
     def value(self) -> str:
@@ -128,4 +144,8 @@ class LlmChatAgentResponse:
             message=data["message"],
             error=data["error"],
             data=data["data"],
+            actions=[
+                LlmChatAgentResponseAction.from_dict(action)
+                for action in data["actions"]
+            ],
         )
