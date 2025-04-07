@@ -5,7 +5,7 @@ from pd_ai_agent_core.helpers.strings import normalize_string
 
 # Third-party imports
 from pydantic import BaseModel, HttpUrl
-from enum import Enum, auto
+from enum import Enum
 
 AgentFunction = Callable[[], Union[str, "LlmChatAgent", dict]]
 

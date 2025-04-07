@@ -65,7 +65,7 @@ class OCRService(SessionService):
 
     def ocr(self, image_data: str) -> OCRResult:
         """OCR an image, the image should be a base64 encoded string"""
-        logger.info(self.session_id, f"Performing OCR on image")
+        logger.info(self.session_id, "Performing OCR on image")
         imageBytes = base64.b64decode(image_data)
         np_array = np.frombuffer(imageBytes, dtype=np.uint8)
         image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)

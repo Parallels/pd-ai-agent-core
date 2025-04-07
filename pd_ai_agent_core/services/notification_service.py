@@ -17,7 +17,6 @@ from queue import Queue
 from pd_ai_agent_core.common.constants import (
     GLOBAL_CHANNEL,
     NOTIFICATION_SERVICE_NAME,
-    CHAT_SUBJECT,
 )
 from pd_ai_agent_core.core_types.session_service import SessionService
 from pd_ai_agent_core.services.service_registry import ServiceRegistry
