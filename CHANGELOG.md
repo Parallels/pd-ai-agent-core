@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.9] - 2025-04-07
+
+- Added the ability to have attachments to a chat message
+- Added the ability to have actions in the chat messages
+- Fixed a few issues with logging
+- Fixed a few bugs with the notification system
+
 ## [0.1.8] - 2025-04-07
 
 
