@@ -32,6 +32,8 @@ from pd_ai_agent_core.messages.constants import (
     VM_STATE_CHANGED,
     VM_SYNC_SCREENSHOT,
 )
+from pd_ai_agent_core.parallels_desktop.get_vms_from_prlctl import get_vm_from_prlctl
+import copy
 
 logger = logging.getLogger(__name__)
 
@@ -281,15 +283,16 @@ class VmEventMonitorService(SessionService):
             if event_item.event_name == "vm_config_changed":
                 event_name = "config_changed"
                 event_type = "unknown"
+
             if event_item.event_name == "vm_snapshot_created":
                 event_name = "snapshot_created"
                 event_type = "unknown"
             if event_item.event_name == "vm_added":
                 event_name = "vm_added"
                 event_type = "vm_added"
-                vms = get_vms()
-                if vms.success:
-                    for vm in vms.vm:
+                vm = get_vms()
+                if vm.success:
+                    for vm in vm.vm:
                         vm_model = parse_vm_json(vm)
                         self.datasource.update_vm(vm_model)
                 new_vm = get_vm(event_item.vm_id)

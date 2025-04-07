@@ -176,3 +176,17 @@ def detect_black_screen(
         )
 
     return bool(black_ratio >= black_percentage)
+
+
+def scale_image(image_data: str, scale_factor: float = 0.5) -> str:
+    """
+    Scale an image by a given factor.
+    """
+    imageBytes = base64.b64decode(image_data)
+    image = np.frombuffer(imageBytes, dtype=np.uint8)
+    image = cv2.resize(image, None, fx=scale_factor, fy=scale_factor)
+
+    # Convert back to base64
+    optimized_base64 = base64.b64encode(image).decode("utf-8")
+
+    return optimized_base64

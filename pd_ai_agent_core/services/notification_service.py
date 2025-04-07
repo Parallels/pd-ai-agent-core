@@ -14,7 +14,11 @@ import logging
 import asyncio
 import threading
 from queue import Queue
-from pd_ai_agent_core.common.constants import GLOBAL_CHANNEL, NOTIFICATION_SERVICE_NAME
+from pd_ai_agent_core.common.constants import (
+    GLOBAL_CHANNEL,
+    NOTIFICATION_SERVICE_NAME,
+    CHAT_SUBJECT,
+)
 from pd_ai_agent_core.core_types.session_service import SessionService
 from pd_ai_agent_core.services.service_registry import ServiceRegistry
 
@@ -27,7 +31,7 @@ DEFAULT_COMPRESSION_LEVEL = 6
 DEFAULT_COMPRESSION_THRESHOLD = 1024  # 1KB
 
 # Default message polling interval in seconds
-DEFAULT_POLLING_INTERVAL = 0.1  # 100ms
+DEFAULT_POLLING_INTERVAL = 0.01  # 10ms
 
 
 class NotificationService(SessionService):
@@ -188,6 +192,7 @@ class NotificationService(SessionService):
             # Prepare the message for sending
             dict_message = message.to_dict()
             json_message = json.dumps(dict_message)
+            logger.debug(f"Sending message: {json_message}")
 
             # Compress the JSON data if enabled
             data_to_send, is_compressed, original_size, compressed_size = (
@@ -219,15 +224,21 @@ class NotificationService(SessionService):
                 websocket.send(final_message), self._event_loop
             )
 
-            # Wait for the operation to complete with a timeout
-            result = future.result(timeout=5.0)
-            print(result)
-            # 5 seconds timeout
-
-            if self._debug and not is_compressed:
-                logger.info(f"Sent uncompressed message: {len(final_message):,} bytes")
-
-            return True
+            # Try with retries
+            max_retries = 10
+            retry_count = 0
+            while retry_count < max_retries:
+                try:
+                    future.result(timeout=5.0)
+                    return True
+                except TimeoutError:
+                    retry_count += 1
+                    if retry_count >= max_retries:
+                        raise
+                    logger.warning(
+                        f"Send operation timed out, retrying ({retry_count}/{max_retries})"
+                    )
+                    time.sleep(1)  # Add delay between retries
 
         except asyncio.CancelledError:
             # Don't log cancelled errors as they're expected during shutdown

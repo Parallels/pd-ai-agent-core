@@ -5,13 +5,87 @@ from pd_ai_agent_core.helpers.strings import normalize_string
 
 # Third-party imports
 from pydantic import BaseModel, HttpUrl
+from enum import Enum, auto
 
 AgentFunction = Callable[[], Union[str, "LlmChatAgent", dict]]
+
+
+class AttachmentType(Enum):
+    """Enum representing different types of attachments that can be used in agent messages."""
+
+    TEXT = "text"
+    IMAGE = "image"
+    CODEBLOCK = "codeblock"
+    FILE = "file"
+    AUDIO = "audio"
+    VIDEO = "video"
+
+    def __str__(self) -> str:
+        return self.value
+
+
+class AttachmentContextVariable(BaseModel):
+    name: str
+    id: str
+    type: AttachmentType = AttachmentType.TEXT
+    value: str
+    download_url: Optional[str] = None
+    language: Optional[str] = None
+    format: Optional[str] = None
+
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "id": self.id,
+            "type": str(
+                self.type
+            ),  # Convert enum to string to make it JSON serializable
+            "value": self.value,
+            "download_url": self.download_url,
+            "language": self.language,
+            "format": self.format,
+        }
 
 
 class DataResult:
     value: Any
     context_variables: Dict[str, Any] = dict()
+
+
+class LlmChatAgentResponseAction(BaseModel):
+    id: str
+    name: str
+    description: str
+    type: str
+    value: str
+    parameters: dict
+    icon: Optional[str] = None
+    group_id: Optional[str] = None
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "type": self.type,
+            "value": self.value,
+            "parameters": self.parameters,
+            "icon": self.icon,
+            "group_id": self.group_id,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            id=data["id"],
+            name=data["name"],
+            description=data["description"],
+            type=data["type"],
+            value=data["value"],
+            parameters=data["parameters"],
+            icon=data["icon"],
+            group_id=data["group_id"],
+        )
 
 
 class AgentFunctionDescriptor:
@@ -61,6 +135,7 @@ class LlmChatResponse(BaseModel):
     messages: List = []
     agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
+    actions: List[LlmChatAgentResponseAction] = []
 
     class Config:
         arbitrary_types_allowed = True
@@ -82,14 +157,6 @@ class LlmChatResult(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
-
-
-class LlmChatAgentResponseAction:
-    name: str
-    description: str
-    type: str
-    value: str
-    parameters: dict
 
 
 class LlmChatAgentResponse:
