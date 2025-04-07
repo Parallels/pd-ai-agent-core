@@ -13,6 +13,7 @@ class Message:
         subject: str = "",
         body: ContentMessage | dict = {},
         context: Optional[dict] = None,
+        icon: Optional[str] = None,
     ):
         self.session_id = session_id
         self.channel = channel
@@ -27,6 +28,7 @@ class Message:
         self._linked_message_id = None
         self._is_partial = False
         self._partial_index = -1
+        self.icon = None
         self.tool_calls = None
 
     @property
@@ -166,6 +168,7 @@ class Message:
             "linked_message_id": self.linked_message_id,
             "is_partial": self.is_partial,
             "partial_index": self.partial_index,
+            "icon": self.icon,
         }
 
     @classmethod
@@ -189,6 +192,7 @@ class Message:
         msg.linked_message_id = data.get("linked_message_id")
         msg.is_partial = data.get("is_partial", False)
         msg.partial_index = data.get("partial_index", -1)
+        msg.icon = data.get("icon")
         return msg
 
     def copy(self) -> "Message":
@@ -212,6 +216,7 @@ class Message:
         new_message.linked_message_id = self.linked_message_id
         new_message.is_partial = self.is_partial
         new_message.partial_index = self.partial_index
+        new_message.icon = self.icon
         return new_message
 
     def get(self, key: Optional[str] = None) -> Any:

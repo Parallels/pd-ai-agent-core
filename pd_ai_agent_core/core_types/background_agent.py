@@ -6,7 +6,11 @@ from pd_ai_agent_core.helpers.strings import normalize_string
 
 class BackgroundAgent(ABC):
     def __init__(
-        self, session_id: str, agent_type: str, interval: Optional[float] = None
+        self,
+        session_id: str,
+        agent_type: str,
+        interval: Optional[float] = None,
+        name: Optional[str] = None,
     ):
         self.session_id = session_id
         self._agent_type = agent_type
@@ -14,7 +18,7 @@ class BackgroundAgent(ABC):
         self.agent_className = self.__class__.__name__
         self.subscribed_messages: Set[str] = set()
         self._is_running = False
-        self._name = ""
+        self._name = name or ""
 
     @abstractmethod
     async def process(self) -> None:
@@ -49,6 +53,10 @@ class BackgroundAgent(ABC):
     def name(self) -> str:
         """Get the name of the agent"""
         return self._name
+
+    def set_name(self, value: str) -> None:
+        """Set the name of the agent"""
+        self._name = value
 
     @property
     def id(self) -> str:

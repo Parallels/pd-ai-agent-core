@@ -21,8 +21,9 @@ def get_vms_from_prlctl(take_screenshot: bool = False) -> GetVmsResult:
         data = json.loads(result.stdout)
         if take_screenshot:
             for vm in data:
-                vm_screenshot_result = get_vm_screenshot(vm["ID"])
-                vm["Screenshot"] = vm_screenshot_result.screenshot
+                if vm["State"] == "running":
+                    vm_screenshot_result = get_vm_screenshot(vm["ID"])
+                    vm["Screenshot"] = vm_screenshot_result.screenshot
         return GetVmsResult(
             success=True,
             message="VMs listed successfully",
@@ -75,7 +76,7 @@ def get_vm_from_prlctl(vm_id: str, take_screenshot: bool = False) -> GetVmResult
             raise RuntimeError(f"VM {vm_id} not found")
         if take_screenshot:
             for vm in result:
-                if vm["ID"] == vm_id:
+                if vm["ID"] == vm_id and vm["State"] == "running":
                     vm_screenshot_result = get_vm_screenshot(vm_id)
                     vm["Screenshot"] = vm_screenshot_result.screenshot
         return GetVmResult(

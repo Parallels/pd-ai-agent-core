@@ -281,15 +281,16 @@ class VmEventMonitorService(SessionService):
             if event_item.event_name == "vm_config_changed":
                 event_name = "config_changed"
                 event_type = "unknown"
+
             if event_item.event_name == "vm_snapshot_created":
                 event_name = "snapshot_created"
                 event_type = "unknown"
             if event_item.event_name == "vm_added":
                 event_name = "vm_added"
                 event_type = "vm_added"
-                vms = get_vms()
-                if vms.success:
-                    for vm in vms.vm:
+                vm = get_vms()
+                if vm.success:
+                    for vm in vm.vm:
                         vm_model = parse_vm_json(vm)
                         self.datasource.update_vm(vm_model)
                 new_vm = get_vm(event_item.vm_id)
