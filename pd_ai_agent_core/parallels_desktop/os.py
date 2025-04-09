@@ -14,7 +14,7 @@ from pd_ai_agent_core.core_types.llm_chat_ai_agent import (
 from pd_ai_agent_core.parallels_desktop.models.virtual_machine import VirtualMachine
 from typing import List
 from pd_ai_agent_core.parallels_desktop.execute_on_vm import execute_on_vm
-from .parsers import (
+from pd_ai_agent_core.parallels_desktop.parsers import (
     parse_linux_info,
     parse_macos_info,
     parse_windows_info,
@@ -161,7 +161,7 @@ def update_packages_cmd(os: str) -> List[str]:
         return []
 
 
-def update_vm_packages(vm_id: str, os: str) -> bool:
+def update_vm_packages(vm_id: str, os: str) -> tuple[bool, str]:
     os = get_std_os(os)
     cmd = None
     if os.lower() == "ubuntu" or os.lower() == "debian":
@@ -171,8 +171,8 @@ def update_vm_packages(vm_id: str, os: str) -> bool:
     cmd = update_packages_cmd(os)
     result = execute_on_vm(vm_id, command=" ".join(cmd))
     if result.exit_code != 0:
-        return False
-    return True
+        return False, result.error
+    return True, result.output
 
 
 def get_os_version_cmd(os: str) -> List[str]:
