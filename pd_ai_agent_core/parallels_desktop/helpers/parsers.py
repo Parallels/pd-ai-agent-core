@@ -382,7 +382,6 @@ def parse_macos_installed_apps(info_text) -> list[AppPackage]:
             version = app.get("version", "")
             arch_kind = app.get("arch_kind", "")
             obtained_from = app.get("obtained_from", "")
-            path = app.get("path", "")
 
             # Create an AppPackage object for this app
             app_package = AppPackage(
