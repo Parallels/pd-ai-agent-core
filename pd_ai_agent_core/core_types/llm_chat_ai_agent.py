@@ -46,7 +46,19 @@ class AttachmentContextVariable(BaseModel):
             "format": self.format,
         }
 
+    @classmethod
+    def from_dict(cls, data: dict):
+        return cls(
+            name=data["name"],
+            id=data["id"],
+            type=AttachmentType(data["type"]),
+            value=data["value"],
+            download_url=data["download_url"],
+            language=data["language"],
+            format=data["format"],
+        )
 
+        
 class DataResult:
     value: Any
     context_variables: Dict[str, Any] = dict()
@@ -136,6 +148,7 @@ class LlmChatResponse(BaseModel):
     agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
     actions: List[LlmChatAgentResponseAction] = []
+    attachments: List[AttachmentContextVariable] = []
 
     class Config:
         arbitrary_types_allowed = True
@@ -167,7 +180,7 @@ class LlmChatAgentResponse:
     agent: Optional[LlmChatAgent] = None
     context_variables: dict = {}
     actions: List[LlmChatAgentResponseAction] = []
-
+    attachments: List[AttachmentContextVariable] = []
     def __init__(
         self,
         status: str,
@@ -177,6 +190,7 @@ class LlmChatAgentResponse:
         agent: Optional[LlmChatAgent] = None,
         context_variables: dict = {},
         actions: List[LlmChatAgentResponseAction] = [],
+        attachments: List[AttachmentContextVariable] = [],
     ):
         self.status = status
         self.message = message
@@ -185,7 +199,7 @@ class LlmChatAgentResponse:
         self.agent = agent
         self.context_variables = context_variables
         self.actions = actions
-
+        self.attachments = attachments
     def to_dict(self):
         return {
             "status": self.status,
@@ -193,6 +207,7 @@ class LlmChatAgentResponse:
             "error": self.error,
             "data": self.data if self.data is not None else None,
             "actions": [action.to_dict() for action in self.actions],
+            "attachments": [attachment.to_dict() for attachment in self.attachments],
         }
 
     def value(self) -> str:
@@ -214,5 +229,9 @@ class LlmChatAgentResponse:
             actions=[
                 LlmChatAgentResponseAction.from_dict(action)
                 for action in data["actions"]
+            ],
+            attachments=[
+                AttachmentContextVariable.from_dict(attachment)
+                for attachment in data["attachments"]
             ],
         )
