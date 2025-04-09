@@ -77,7 +77,7 @@ class UpdatePackageResponse(pydantic.BaseModel):
         if self.has_updates():
             result += f"\nUpdates: {updates_to_string(self.updates)}"
         if self.has_installed_apps():
-            result += f"\nInstalled Apps: {'\n'.join([app.to_string() for app in self.installed_apps])}"
+            result += f"\nInstalled Apps: {updates_to_string(self.installed_apps)}"
         return result
 
     def installed_apps_to_json(self) -> str:
