@@ -58,7 +58,7 @@ class AttachmentContextVariable(BaseModel):
             format=data["format"],
         )
 
-        
+
 class DataResult:
     value: Any
     context_variables: Dict[str, Any] = dict()
@@ -181,6 +181,7 @@ class LlmChatAgentResponse:
     context_variables: dict = {}
     actions: List[LlmChatAgentResponseAction] = []
     attachments: List[AttachmentContextVariable] = []
+
     def __init__(
         self,
         status: str,
@@ -200,6 +201,7 @@ class LlmChatAgentResponse:
         self.context_variables = context_variables
         self.actions = actions
         self.attachments = attachments
+
     def to_dict(self):
         return {
             "status": self.status,

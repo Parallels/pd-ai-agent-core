@@ -7,6 +7,7 @@ from pd_ai_agent_core.parallels_desktop.models.execute_vm_command_result import 
     ExecuteVmCommandResult,
 )
 
+
 def execute_on_vm(
     vm_id: str, command: str, args: List[str] = []
 ) -> ExecuteVmCommandResult:
@@ -29,9 +30,9 @@ def execute_on_vm(
         while waitFor > 0:
             helloArgs = []
             if vm_details.vm.os.lower().startswith("win"):
-              helloArgs = ["print", "hello"]
+                helloArgs = ["print", "hello"]
             else:
-              helloArgs = ["echo", "hello"]
+                helloArgs = ["echo", "hello"]
             cmd: List[str] = [get_prlctl_command(), "exec", vm_id, *helloArgs]
             result = subprocess.run(
                 cmd,
@@ -45,10 +46,10 @@ def execute_on_vm(
                 break
             time.sleep(1)
             waitFor -= 1
-            
+
         if not is_available:
             return ExecuteVmCommandResult(error="VM is not available", exit_code=1)
-        
+
         cmdArgs = command.split(" ")
         if len(args) > 0:
             cmdArgs.extend(args)
