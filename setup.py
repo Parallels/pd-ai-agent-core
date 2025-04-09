@@ -17,7 +17,7 @@ requirements = [
 
 setup(
     name="pd-ai-agent-core",
-    version="0.1.10",
+    version="0.1.11",
     author="Parallels",
     author_email="carlos.lapao@parallels.com",
     description="A core library for AI agent functionality",
