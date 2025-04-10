@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.12] - 2025-04-10
+
+- Added a linked message id to all notifications
+
 ## [0.1.11] - 2025-04-09
 
 - Fixed an issue where we could not import some modules
