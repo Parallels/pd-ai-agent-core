@@ -457,9 +457,9 @@ def parse_debian_installed_apps(info_text) -> list[AppPackage]:
 
             # Create an AppPackage object for this app
             app = AppPackage(
-                name=package_name,
-                version=version,
-                release=package_name,
+                name=package_name.replace("~", ""),
+                version=version.replace("~", ""),
+                release=package_name.replace("~", ""),
                 codename="debian",
                 description="",
             )
