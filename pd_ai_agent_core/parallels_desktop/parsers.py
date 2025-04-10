@@ -276,11 +276,11 @@ def parse_debian_updates(info_text) -> list[AppPackage]:
 
                 # Create an UpdatePackage object for this update
                 update = AppPackage(
-                    name=package_name,
+                    name=package_name.replace("~", ""),
                     version=codename.replace("~", ""),
-                    release=package_name,
-                    codename=version,
-                    description=architecture,
+                    release=package_name.replace("~", ""),
+                    codename=version.replace("~", ""),
+                    description=architecture.replace("~", ""),
                 )
 
                 updates.append(update)
