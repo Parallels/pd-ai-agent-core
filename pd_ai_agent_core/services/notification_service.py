@@ -356,21 +356,28 @@ class NotificationService(SessionService):
         event: str,
         event_type: Optional[str],
         event_data: Dict[str, Any] | list[Dict[str, Any]] | None = None,
+        linked_message_id: str | None = None,
     ):
         """Send an event message to a specific session"""
         event_message = create_event_message(
-            self._session_id, channel, event, event_type, event_data
+            self._session_id, channel, event, event_type, event_data, linked_message_id
         )
         await self.send(event_message)
         if self._debug:
             logger.debug(f"Sent event message: {event_message.to_dict()}")
 
-    async def send_error(self, channel: Optional[str], error: str):
+    async def send_error(
+        self,
+        channel: Optional[str],
+        error: str,
+        linked_message_id: str | None = None,
+    ):
         """Send an error message to a specific session"""
         error_message = create_error_message(
             session_id=self._session_id,
             channel=channel if channel is not None else str(uuid.uuid4()),
             error_message=error,
+            linked_message_id=linked_message_id,
         )
 
         await self.send(error_message)
@@ -380,13 +387,14 @@ class NotificationService(SessionService):
     async def send_exception(
         self,
         e: Exception,
+        linked_message_id: str | None = None,
         message: Message | None = None,
         channel: Optional[str] = None,
     ):
         """Send an error message to a specific session"""
         if message is not None:
             error_message = create_error_message_from_message(
-                message, error_message=str(e)
+                message, error_message=str(e), linked_message_id=linked_message_id
             )
         else:
             error_message = create_error_message(
