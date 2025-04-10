@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.13] - 2025-04-10
+
+- fixed an issue with the naming for web
+
 ## [0.1.12] - 2025-04-10
 
 - Added a linked message id to all notifications
