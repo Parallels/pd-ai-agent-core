@@ -10,6 +10,9 @@ from pd_ai_agent_core.common.constants import BACKGROUND_SERVICE_NAME
 from collections import deque
 from pd_ai_agent_core.services.service_registry import ServiceRegistry
 import concurrent.futures
+import threading
+import time
+from queue import Queue
 
 logger = logging.getLogger(__name__)
 
@@ -22,12 +25,10 @@ class BackgroundAgentService(SessionService):
         rate_limit_window: int = 60,
         debug: bool = False,
     ):
-        self._agents: Dict[tuple[str, str], BackgroundAgent] = (
-            {}
-        )  # (session_id, agent_type) -> agent
+        self._agents: Dict[tuple[str, str], BackgroundAgent] = {}
         self._tasks: Dict[tuple[str, str], asyncio.Task] = {}
-        self._message_queue: deque[BackgroundMessage] = deque()
-        self._processing = False
+        self._message_queue: Queue = Queue()
+        self._processing = True
         self._session_id = session_id
         self._rate_limit_messages = rate_limit_messages
         self._rate_limit_window = rate_limit_window
@@ -36,7 +37,40 @@ class BackgroundAgentService(SessionService):
         self._thread_pool = concurrent.futures.ThreadPoolExecutor(max_workers=10)
         self._main_loop = asyncio.get_event_loop()
         self._agent_loops: Dict[tuple[str, str], asyncio.AbstractEventLoop] = {}
+
+        # Start dedicated message processing thread
+        self._start_message_processor()
         self.register()
+
+    def _start_message_processor(self):
+        """Start a background thread to process messages from the queue"""
+
+        def process_messages():
+            logger.info(
+                f"Background message processor started for session {self._session_id}"
+            )
+            while self._processing:
+                try:
+                    if not self._message_queue.empty():
+                        message = self._message_queue.get_nowait()
+                        try:
+                            asyncio.run_coroutine_threadsafe(
+                                self._distribute_message(message), self._main_loop
+                            ).result(timeout=10.0)
+                        except Exception as e:
+                            logger.error(f"Error processing background message: {e}")
+                        finally:
+                            self._message_queue.task_done()
+                    time.sleep(0.01)  # Small delay to prevent CPU spinning
+                except Exception as e:
+                    logger.error(f"Error in background message processor: {e}")
+                    time.sleep(0.5)  # Longer delay on error
+            logger.info(
+                f"Background message processor stopped for session {self._session_id}"
+            )
+
+        self._processor_thread = threading.Thread(target=process_messages, daemon=True)
+        self._processor_thread.start()
 
     def name(self) -> str:
         return BACKGROUND_SERVICE_NAME
@@ -53,6 +87,16 @@ class BackgroundAgentService(SessionService):
 
     def unregister(self) -> None:
         """Unregister this service from the registry"""
+        self._processing = False
+        if (
+            hasattr(self, "_processor_thread")
+            and self._processor_thread
+            and self._processor_thread.is_alive()
+        ):
+            try:
+                self._processor_thread.join(timeout=2.0)
+            except Exception as e:
+                logger.error(f"Error stopping processor thread: {e}")
         self.unregister_background_agent()
         logger.info(f"Background service unregistered for session {self._session_id}")
 
@@ -66,11 +110,6 @@ class BackgroundAgentService(SessionService):
         # Create a new event loop for this agent
         if agent.interval:
             self._tasks[key] = asyncio.create_task(self._run_agent_timer(agent))
-
-        # Ensure message processing is running
-        if not self._processing:
-            self._processing = True
-            asyncio.create_task(self._process_message_queue())
 
         return True
 
@@ -111,7 +150,12 @@ class BackgroundAgentService(SessionService):
         # Clear all remaining data structures
         self._agents.clear()
         self._tasks.clear()
-        self._message_queue.clear()
+        while not self._message_queue.empty():
+            try:
+                self._message_queue.get_nowait()
+                self._message_queue.task_done()
+            except:
+                pass
         self._message_timestamps.clear()
 
     def post_message(self, message_type: str, data: dict) -> None:
@@ -121,7 +165,7 @@ class BackgroundAgentService(SessionService):
             return
 
         message = BackgroundMessage(message_type=message_type, data=data)
-        self._message_queue.append(message)
+        self._message_queue.put(message)
         self._message_timestamps.append(datetime.now())
         logger.info(f"Message queued: {message_type}")
 
@@ -138,7 +182,6 @@ class BackgroundAgentService(SessionService):
 
     async def _run_agent_timer(self, agent: BackgroundAgent):
         """Run the agent's process function at specified intervals"""
-        # key = (agent.session_id, agent.agent_type)
         while True:
             if agent.interval is None:
                 await asyncio.sleep(0)
@@ -153,15 +196,6 @@ class BackgroundAgentService(SessionService):
                         f"Error in agent {agent.agent_type} for session {agent.session_id}: {e}"
                     )
             await asyncio.sleep(agent.interval or 0)
-
-    async def _process_message_queue(self):
-        """Process messages from the queue"""
-        while self._processing:
-            if self._message_queue:
-                message = self._message_queue.popleft()
-                logger.info(f"Processing message: {message.message_type}")
-                await self._distribute_message(message)
-            await asyncio.sleep(0.1)
 
     async def _distribute_message(self, message: BackgroundMessage):
         """Distribute a message to all subscribed agents"""
